@@ -13,7 +13,7 @@ locale.setlocale(locale.LC_ALL, "")
 class Database:
     def __init__(self):
         self.client = MongoClient("mongodb://localhost:27017")
-        self.db = self.client["nobitex"]
+        self.db = self.client["test-wallet-client"]
         self.collection = self.db["wallet"]
 
     def close_connection(self):
@@ -69,6 +69,9 @@ class WalletManager:
         self.key_retriever = KeyRetriever(self.collection)
 
     def main(self) -> None:
+        self.key_initializer.initialize_key("total_fund", 0)
+        self.key_initializer.initialize_key("total_stock", 0)
+
         total_stock_value = locale.format_string(
             f="%d",
             grouping=True,
@@ -90,9 +93,6 @@ class WalletManager:
         print(
             f"Last total stock value: {total_stock_value}\nLast update: {total_stock_updated_at}"
         )
-
-        self.key_initializer.initialize_key("total_fund", 0)
-        self.key_initializer.initialize_key("total_stock", 0)
 
         print("\n===== Update Funds =====")
         fund_input = input(
