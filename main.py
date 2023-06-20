@@ -96,17 +96,22 @@ class WalletManager:
 
         print("\n===== Update Funds =====")
         fund_input = input(
-            f"{Fore.YELLOW}Enter the updated amount (e.g., 1000 or -1000 or reset): {Style.RESET_ALL}"
+            f"{Fore.YELLOW}Enter the updated amount (e.g., 1000 or -1000 or reset): {Style.RESET_ALL}\n{Fore.BLUE}use comma to separate sum of numbers(e.g., 299,-199,-100)\npositive numbers will be X1000 {Style.RESET_ALL}"
         )
-
         if fund_input:
             try:
                 if fund_input == "reset":
                     self.key_updater.set_key("total_fund", 0)
                     print("Funds reset successfully.")
                 else:
-                    number = int(fund_input)
-                    self.key_updater.update_key("total_fund", number)
+                    fund_input = fund_input.split(",")
+                    fund_sum = sum(
+                        [
+                            (int(num) * 1000 if int(num) > 0 else int(num))
+                            for num in fund_input
+                        ]
+                    )
+                    self.key_updater.update_key("total_fund", fund_sum)
                     print("Funds updated successfully.")
             except ValueError:
                 print("Invalid input. No update on funds.")
