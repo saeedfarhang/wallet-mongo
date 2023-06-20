@@ -72,17 +72,15 @@ class WalletManager:
         self.key_initializer.initialize_key("total_fund", 0)
         self.key_initializer.initialize_key("total_stock", 0)
 
-        total_stock_value = locale.format_string(
-            f="%d",
-            grouping=True,
-            val=self.key_retriever.retrieve_key_value("total_stock")["value"],
-        )
+        total_stock_value = self.key_retriever.retrieve_key_value("total_stock")[
+            "value"
+        ]
         total_stock_updated_at = self.key_retriever.retrieve_key_value("total_stock")[
             "updated_at"
         ]
         total_fund_value = self.key_retriever.retrieve_key_value("total_fund")["value"]
         print(
-            "Last total funds value:",
+            "Last total funds value: ",
             locale.format_string(
                 f="%d",
                 grouping=True,
@@ -91,8 +89,26 @@ class WalletManager:
         )
 
         print(
-            f"Last total stock value: {total_stock_value}\nLast update: {total_stock_updated_at}"
+            "Last total stock value: ",
+            locale.format_string(
+                f="%d",
+                grouping=True,
+                val=total_stock_value,
+            ),
         )
+        print(f"Last update: {total_stock_updated_at}")
+
+        total_profit = total_stock_value - total_fund_value
+        total_profit_locale = locale.format_string(
+            f="%d", grouping=True, val=total_profit
+        )
+
+        if total_profit < 0:
+            print(f"\nTotal Profit: {Fore.RED}{total_profit_locale}{Style.RESET_ALL}")
+        elif total_profit > 0:
+            print(f"\nTotal Profit: {Fore.GREEN}{total_profit_locale}{Style.RESET_ALL}")
+        else:
+            print("\nTotal Profit:", total_profit_locale)
 
         print("\n===== Update Funds =====")
         fund_input = input(
